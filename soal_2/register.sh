@@ -1,21 +1,21 @@
-#masih belum fixxxx
+#belum fixxx
 
 #!/bin/bash
 
-# memeriksa email terdaftar
+# cek email
 function check_email_exists() {
     local email=$1
     grep -q "^$email:" users.txt
     return $?
 }
 
-# mengenkripsi password base64
+# enkripsi password base64
 function encrypt_password() {
     local password=$1
     echo -n "$password" | base64
 }
 
-# Fungsi untuk memvalidasi kompleksitas password
+# cek password sesuai minimum kriteria
 function validate_password() {
     local password=$1
     if [[ ${#password} -lt 8 ]]; then
@@ -48,7 +48,7 @@ function register_user() {
         return 1
     fi
 
-    # Validasi password
+    # verifikasi password
     if ! validate_password "$password"; then
         echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN GAGAL] Password tidak memenuhi persyaratan kompleksitas untuk pengguna $username." >> auth.log
         echo "Password tidak memenuhi persyaratan kompleksitas. Pendaftaran gagal."
@@ -58,21 +58,21 @@ function register_user() {
     # Enkripsi password
     local encrypted_password=$(encrypt_password "$password")
 
-    # Tentukan jenis pengguna
+    # menentukan jenis pengguna user/admin (kalo email ada adminnya berarti dia masuk user admin)
     if [[ $email == *admin* ]]; then
         user_type="admin"
     else
         user_type="pengguna"
     fi
 
-    # Tambahkan detail pengguna ke users.txt
+    # masukkan data ke users.txt
     echo "$email:$username:$security_question:$security_answer:$encrypted_password:$user_type" >> users.txt
 
     echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN BERHASIL] Pengguna $username berhasil terdaftar." >> auth.log
     echo "Pengguna $username berhasil terdaftar."
 }
 
-# Skrip utama dimulai di sini
+# Skrip utama / main
 
 echo "Welcome to Registration System"
 
