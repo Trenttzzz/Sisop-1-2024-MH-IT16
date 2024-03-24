@@ -1,4 +1,4 @@
-//masih belum fixxxx
+#masih belum fixxxx
 
 #!/bin/bash
 
