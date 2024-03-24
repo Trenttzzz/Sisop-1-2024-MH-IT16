@@ -1,3 +1,5 @@
+//masih belum fixxxx
+
 #!/bin/bash
 
 # memeriksa email terdaftar
