@@ -28,17 +28,61 @@ function login() {
     # hash password
     local password_hash=$(grep "^$email:" users.txt | cut -d ':' -f 5)
 
-    # dekripisi password dan diperiksa
+    # desenkripsi password
+    local password_hash=$(echo "$user_data" | cut -d ':' -f 5)
     local decrypted_password=$(decrypt_password "$password_hash")
     if [[ "$password" != "$decrypted_password" ]]; then
-        echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN GAGAL] Password salah untuk pengguna dengan email $email." >> auth.log
-        echo "Password salah. Login gagal."
+        echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN FAILED] Incorrect password for user with email $email." >> auth.log
+        echo "Incorrect password. Login failed."
         return 1
     fi
 
+    if [[ "$user_type" == "admin" ]]; then
+        echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN SUCCESS] Admin with email $email logged in successfully." >> auth.log
+        echo "Login successful as admin. Welcome!"
+        # call fungsi admin
+        admin_menu
+    else
+        echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN SUCCESS] User with email $email logged in successfully." >> auth.log
+        echo "Login successful as user. Welcome!"
+    fi
+}
+
+# fungsi utk admin
+function admin_menu() {
+    PS3="Select an option: "
+    options=("Add User" "Edit User" "Delete User" "Logout")
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "Add User")
+                bash register.sh
+                break
+                ;;
+            "Edit User")
+                read -p "Enter the email of the user you want to edit: " email
+                # fungsi ediit user
+                bash edit_user.sh "$email"
+                break
+                ;;
+            "Delete User")
+                read -p "Enter the email of the user you want to delete: " email
+                # fungsi delete user
+                bash delete_user.sh "$email"
+                break
+                ;;
+            "Logout")
+                echo "Logging out..."
+                break
+                ;;
+            *) echo "Invalid option. Please select again.";;
+        esac
+    done
+}
+
     echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN BERHASIL] Pengguna dengan email $email berhasil login." >> auth.log
     echo "Login berhasil. Selamat datang!"
-}
+
 
 # untuk mereset password
 function forgot_password() {
