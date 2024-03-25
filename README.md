@@ -161,7 +161,7 @@ function register_user() {
     echo "$email:$username:$security_question:$security_answer:$encrypted_password:$user_type" >> users.txt
 
 ```
-fungsi ini memeriksa apakah email yang diberikan sudah terdaftar dalam sistem dengan memanggil fungsi `check_email_exists`. Selanjutnya, fungsi memeriksa kekuatan password dengan memanggil fungsi `validate_password`. Kemudian data pengguna yang berhasil di register akan disimpan pada file `users.txt` dan di akhir fungsi akan mencatat register dalam file log `auth.log`.
+fungsi ini memeriksa apakah email yang diberikan sudah terdaftar dalam sistem dengan memanggil fungsi `check_email_exists`. Kemudian data pengguna yang berhasil di register akan disimpan pada file `users.txt` dan di akhir fungsi akan mencatat register dalam file log `auth.log`.
 
 #### Skrip utama / main
 ```
@@ -177,7 +177,7 @@ echo
 
 register_user "$email" "$username" "$security_question" "$security_answer" "$password"
 ```
-
+fungsi main diatas untuk menampilkan seperti di soal. Kemudian setiap data yang dimasukkan oleh user akan disimpan pada variabel sesuai dengan yang ditentukan. Dan fungsi `register_user` akan melakukan proses register seperti fungsi diatasnya.
 
 ## Soal 3
 
