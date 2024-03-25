@@ -141,23 +141,22 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
 
 2. Ketika program **register.sh** dijalankan maka user maupun admin akan melakukan register. *register* itu sendiri menggunakan email, username, pertanyaan keamanan serta jawabannya dan password, berikut adalah code snippetnya:
    ```Shell Script
-   #!/bin/bash
 
 #### cek email
-function check_email_exists() {
+`function check_email_exists() {
     local email=$1
     grep -q "^$email:" users.txt
     return $?
 }
-
-# enkripsi password base64
-function encrypt_password() {
+`
+#### enkripsi password base64
+`function encrypt_password() {
     local password=$1
     echo -n "$password" | base64
 }
-
-# cek password sesuai minimum kriteria
-function validate_password() {
+`
+#### cek password sesuai minimum kriteria
+`function validate_password() {
     local password=$1
     if [[ ${#password} -lt 8 ]]; then
         return 1
@@ -173,8 +172,9 @@ function validate_password() {
     fi
     return 0
 }
-
-# Fungsi untuk mendaftarkan pengguna
+`
+#### Fungsi untuk mendaftarkan pengguna
+```
 function register_user() {
     local email=$1
     local username=$2
@@ -212,10 +212,10 @@ function register_user() {
     echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN BERHASIL] Pengguna $username berhasil terdaftar." >> auth.log
     echo "Pengguna $username berhasil terdaftar."
 }
+```
 
-
-# Skrip utama / main
-
+#### Skrip utama / main
+```
 echo "Welcome to Registration System"
 
 
