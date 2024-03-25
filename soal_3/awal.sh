@@ -9,36 +9,40 @@ unzip genshin_files.zip
 # Unzip file genshin_character.zip
 unzip genshin_character.zip
 
-# Decode setiap nama file yang terenkripsi dengan hex
-for file in genshin_character/*.jpg; do
-    decoded_name=$(echo $file | sed 's/\.jpg$//' | xxd -r -p)
-    mv "$file" "${file%/*}/${decoded_name}.jpg"
+path="/home/zaa/Desktop/sisop/modul-1/Sisop-1-2024-MH-IT16/soal_3/genshin_character"
+
+# buat folder di dalam genshin_character
+mkdir -p  "$path/Mondstat" "$path/Sumeru" "$path/Fontaine" "$path/Inazuma" "$path/Liyue"
+
+# iterasi ke semua file .jpg di dalam folder 
+for file in "$path"/*.jpg; do
+  
+  # decrypt hex ke string
+  files_init=$(echo "${file%.*}")
+  decrypt=$(echo "${files_init##*/}" | xxd -r -p)
+
+  # mengganti nama file awal ke versi decrypt nya
+  mv -- "$path/${files_init##*/}".jpg "$decrypt".jpg
+
+  # ambil region dari nama $decrypt lalu tulis ulang namanya di fungsi $new_name
+  region=$(awk -F, "/$decrypt/"'{OFS=","; print $2}' list_character.csv)
+  new_name=$(awk -F, "/$decrypt/"'{OFS=","; print $2 "-" $1 "-" $3 "-" $4}' list_character.csv)
+  
+  # merename file decrypt menjadi new_name.jpg dan memindahkan file new_name ke region yang sesuai di file csv 
+  mv -- "$decrypt.jpg" "$new_name".jpg
+  mv "$new_name".jpg "$path/$region"
 done
 
-# Merename setiap file berdasarkan data lengkap karakter dari list_character.csv
-IFS=$'\n' # Set internal field separator to newline
-for line in $(tail -n +2 list_character.csv); do
-    nama=$(echo $line | cut -d ',' -f 1)
-    region=$(echo $line | cut -d ',' -f 2)
-    elemen=$(echo $line | cut -d ',' -f 3)
-    senjata=$(echo $line | cut -d ',' -f 4)
-    
-    # Buat folder berdasarkan region jika belum ada
-    mkdir -p "${region}"
+# clear output tidak penting
+clear
 
-    # Cari file yang sesuai dengan karakter dan pindahkan ke folder yang sesuai
-    character_file=$(find genshin_character -type f -name "*${nama}*" | head -n 1)
-    if [ -n "$character_file" ]; then
-        mv "$character_file" "${region}/${region} - ${nama} - ${elemen} - ${senjata}.jpg"
-    fi
-done
+# hitung jumlah weapon yang setipe
+echo "Weapon Count:"
+echo "Claymore: $(grep -c 'Claymore' list_character.csv)"
+echo "Polearm: $(grep -c 'Polearm' list_character.csv)"
+echo "Catalyst: $(grep -c 'Catalyst' list_character.csv)"
+echo "Bow: $(grep -c 'Bow' list_character.csv)"
+echo "Sword: $(grep -c 'Sword' list_character.csv)"
 
-# Menghapus file yang tidak diperlukan
-rm genshin_character.zip list_character.csv genshin.zip
-
-# Menghitung dan menampilkan jumlah pengguna untuk setiap senjata
-echo "Jumlah pengguna untuk setiap senjata:"
-for senjata in $(find . -mindepth 2 -type f -name "*.jpg" | cut -d '-' -f 4 | sort | uniq); do
-    jumlah=$(find . -mindepth 2 -type f -name "*-${senjata}.jpg" | wc -l)
-    echo "${senjata} : ${jumlah}"
-done
+# menghapus file yang tidak diperlukan
+rm -rf genshin_character.zip list_character.csv genshin_files.zip
