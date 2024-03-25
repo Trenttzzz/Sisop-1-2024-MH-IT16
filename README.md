@@ -143,20 +143,23 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
    ```Shell Script
 
 #### cek email
-`function check_email_exists() {
+```
+function check_email_exists() {
     local email=$1
     grep -q "^$email:" users.txt
     return $?
 }
-`
+```
 #### enkripsi password base64
-`function encrypt_password() {
+```
+function encrypt_password() {
     local password=$1
     echo -n "$password" | base64
 }
-`
+```
 #### cek password sesuai minimum kriteria
-`function validate_password() {
+```
+function validate_password() {
     local password=$1
     if [[ ${#password} -lt 8 ]]; then
         return 1
@@ -172,7 +175,7 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
     fi
     return 0
 }
-`
+```
 #### Fungsi untuk mendaftarkan pengguna
 ```
 function register_user() {
