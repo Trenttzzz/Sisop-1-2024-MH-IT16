@@ -141,7 +141,7 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
 
 2. Ketika program **register.sh** dijalankan maka user maupun admin akan melakukan register. *register* itu sendiri menggunakan email, username, pertanyaan keamanan serta jawabannya dan password, berikut adalah code snippetnya:
 
-#### **register.sh**
+### **register.sh**
 #### Fungsi untuk mendaftarkan pengguna
 ``` Shell Script
 function register_user() {
@@ -226,7 +226,7 @@ Fungsi `validate_password()` adalah sebuah bash function yang bertujuan untuk me
 ```
 Program tersebut merupakan bagian dari sebuah skrip bash yang bertujuan untuk mendaftarkan pengguna baru ke dalam sistem. Baris pertama menambahkan data pengguna baru ke dalam file `users.txt`, sementara baris kedua mencatat keberhasilan pendaftaran dalam file log `auth.log `dan mencetak pesan keberhasilan pendaftaran ke dalam output terminal.
 
-#### **login.sh**
+### **login.sh**
 6. Karena program harus bisa melakukan login setelah register, login hanya perlu dilakukan menggunakan password dan email. Saya menmbuat fungsi awal sebagai berikut
 ``` Shell Script
 # Fungsi untuk melakukan login
@@ -243,6 +243,63 @@ function login() {
 }
 ```
 Itu merupakan fungsi awal untuk user memasukkan data login kemudian diperiksa apakah data yang dimasukkan cocok dengan data pada `users.txt`
+
+7. Disini saya akan membuat program akan menampilkan opsi ketika **login.sh** dijalankan seperti pada soal maka saya akan membuat fungsi seperti berikut:
+```shell script
+echo "Welcome to Login System"
+echo "1. Login"
+echo "2. Lupa Password"
+
+read -p "" choice
+
+case $choice in
+    1)
+        read -p "Email: " email
+        read -sp "Password: " password
+        echo
+        login "$email" "$password"
+        ;;
+    2)
+        read -p "Email: " email
+        forgot_password "$email"
+        ;;
+    *)
+        echo "Pilihan tidak valid."
+        ;;
+```
+Maka program tersebut akan menampilkan opsi login atau lupa password, jika user memilih opsi login maka program akan menjalankan fungsi `login` kemudian jika user memilih opsi 2 yang dimana merupakan opsi lupa password maka program akan menjalankan fungsi `forgot_password`, fungsi forgot password sendiri akan saya jelaskan dibawah berikut:
+``` Shell Script
+function forgot_password() {
+    local email=$1
+
+    # periksa email ada/tidak
+    if ! check_email_exists "$email"; then
+        echo "Pengguna dengan email $email tidak ada."
+        return 1
+    fi
+
+    # dapatkan pertanyaan keamanan dari email yang dimasukkan
+    local security_question=$(grep "^$email:" users.txt | cut -d ':' -f 3)
+
+    echo "Pertanyaan Keamanan: $security_question"
+    read -p "Jawaban: " security_answer
+
+    # dapatkan jawaban yg benar dari users.txt
+    local correct_security_answer=$(grep "^$email:" users.txt | cut -d ':' -f 4)
+
+    # periksa jawaban dari pertanyaan keamanan
+    if [[ "$security_answer" != "$correct_security_answer" ]]; then
+        echo "Jawaban keamanan salah. Reset password gagal."
+        return 1
+    fi
+
+    # password baru dari users.txt
+    local new_password=$(grep "^$email:" users.txt | cut -d ':' -f 5)
+
+    echo "Password Anda telah direset menjadi: $new_password"
+}
+```
+fungsi diatas adalah fungsi yang dimana user dapat mereset password jika lupa, `forgot_password()` digunakan untuk mereset password. Singkatnya program akan memeriksa apakah email yang dimasukkan oleh user terdapat pada `users.txt` jika email ditemukan maka program akan menampilkan pertanyaan keamanan sesuai dengan email user, semua itu diambil dari `users.txt`. Kemudian jika jawaban dari pertanyaan keamanan yang dijawab oleh user benar maka program akan mengambil password baru dari file `users.txt` dan menampilkan password baru kepada user sebagai reset password.
 
 ## Soal 3
 
