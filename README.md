@@ -157,29 +157,9 @@ function register_user() {
         return 1
     fi
 
-    # verifikasi password
-    if ! validate_password "$password"; then
-        echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN GAGAL] Password tidak memenuhi persyaratan kompleksitas untuk pengguna $username." >> auth.log
-        echo "Password tidak memenuhi persyaratan kompleksitas. Pendaftaran gagal."
-        return 1
-    fi
-
-    # Enkripsi password
-    local encrypted_password=$(encrypt_password "$password")
-
-    # menentukan jenis pengguna user/admin (kalo email ada adminnya berarti dia masuk user admin)
-    if [[ $email == *admin* ]]; then
-        user_type="admin"
-    else
-        user_type="pengguna"
-    fi
-
     # masukkan data ke users.txt
     echo "$email:$username:$security_question:$security_answer:$encrypted_password:$user_type" >> users.txt
 
-    echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN BERHASIL] Pengguna $username berhasil terdaftar." >> auth.log
-    echo "Pengguna $username berhasil terdaftar."
-}
 ```
 fungsi ini memeriksa apakah email yang diberikan sudah terdaftar dalam sistem dengan memanggil fungsi `check_email_exists`. Selanjutnya, fungsi memeriksa kekuatan password dengan memanggil fungsi `validate_password`. Kemudian data pengguna yang berhasil di register akan disimpan pada file `users.txt` dan di akhir fungsi akan mencatat register dalam file log `auth.log`.
 
