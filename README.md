@@ -164,7 +164,7 @@ function register_user() {
 fungsi ini memeriksa apakah email yang diberikan sudah terdaftar dalam sistem dengan memanggil fungsi `check_email_exists`. Kemudian data pengguna yang berhasil di register akan disimpan pada file `users.txt` dan di akhir fungsi akan mencatat register dalam file log `auth.log`.
 
 #### Skrip utama / main
-```
+``` Shell Script
 echo "Welcome to Registration System"
 
 
