@@ -142,7 +142,7 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
 2. Ketika program **register.sh** dijalankan maka user maupun admin akan melakukan register. *register* itu sendiri menggunakan email, username, pertanyaan keamanan serta jawabannya dan password, berikut adalah code snippetnya:
 
 #### Fungsi untuk mendaftarkan pengguna
-```
+``` Shell Script
 function register_user() {
     local email=$1
     local username=$2
