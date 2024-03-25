@@ -143,7 +143,7 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
    ```Shell Script
    #!/bin/bash
 
-# cek email
+#### cek email
 function check_email_exists() {
     local email=$1
     grep -q "^$email:" users.txt
