@@ -349,6 +349,7 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
     * `echo "[date +'%d/%m/%Y %H:%M:%S'] [LOGIN SUCCESS] Admin with email $email logged in successfully." >> auth.log`
     * `echo "[date +'%d/%m/%Y %H:%M:%S'] [LOGIN SUCCESS] User with email $email logged in successfully." >> auth.log`
     * `echo "[date +'%d/%m/%Y %H:%M:%S'] [LOGIN BERHASIL] Pengguna dengan email $email berhasil login." >> auth.log`
+    
     Pada intinya semua aktifitas yang terdapat pada login dan register akan tersimpan pada auth.log menggunakan perintah seperti diatas.
 
 ## Soal 3
