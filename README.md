@@ -339,7 +339,7 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
     echo "Login berhasil. Selamat datang!"
     ```
 9. Agar program dapat mencatat seluruh log dengan baik maka saya membuat program menyimpan semua seluruh log baik login maupun register ke dalam file auth.log menggunakan fungsi sebagai berikut.
-    #### Pada `register.sh``
+    #### Pada `register.sh`
     * `echo "[date +'%d/%m/%Y %H:%M:%S'] [PENGGABUNGAN GAGAL] Pengguna dengan email $email sudah terdaftar." >> auth.log`
     * `echo "[date +'%d/%m/%Y %H:%M:%S'] [PENGGABUNGAN GAGAL] Password tidak memenuhi persyaratan kompleksitas untuk pengguna $username." >> auth.log`
     * `echo "[date +'%d/%m/%Y %H:%M:%S'] [PENGGABUNGAN BERHASIL] Pengguna $username berhasil terdaftar." >> auth.log`
