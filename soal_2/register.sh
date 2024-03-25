@@ -1,5 +1,3 @@
-#belum fixxx
-
 #!/bin/bash
 
 # cek email
