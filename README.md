@@ -265,7 +265,7 @@ path_size=$(du -sh "$path" | cut -f1)
 # Write the metrics to the log file
 echo "mem_total,mem_used,mem_free,mem_shared,mem_buff,mem_available,swap_total,swap_used,swap_free,path,path_size" > "$log_file"
 echo "$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
-
+```
 
 #### Skrip untuk Membuat Agregasi Per Jam (aggregate_minutes_to_hourly_log.sh):
 ```
@@ -288,21 +288,22 @@ echo "type,mem_total,mem_used,mem_free,mem_shared,mem_buff,mem_available,swap_to
 echo "minimum,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
 echo "maximum,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
 echo "average,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
-
+```
 
 3. Untuk menjalankan kedua skrip ini secara otomatis, tambahkan entri ke dalam crontab sebagai berikut:
-       a. Konfigurasi Cron untuk Mencatat Metrik Setiap Menit:
-           Tambahkan entri berikut ke dalam crontab (crontab -e):
+   a. Konfigurasi Cron untuk Mencatat Metrik Setiap Menit:
+      #### Tambahkan entri berikut ke dalam crontab (crontab -e):
            * * * * * /path/to/minute_log.sh
-       b. Konfigurasi Cron untuk Membuat Agregasi Per Jam:
-           Tambahkan entri berikut ke dalam crontab (crontab -e):
+
+   b. Konfigurasi Cron untuk Membuat Agregasi Per Jam:
+      #### Tambahkan entri berikut ke dalam crontab (crontab -e):
            0 * * * * /path/to/aggregate_minutes_to_hourly_log.sh
 
    *Pastikan untuk mengganti /path/to/aggregate_minutes_to_hourly_log.sh dengan path lengkap ke skrip aggregate_minutes_to_hourly_log.sh.
    Kemudian setelah itu, jika kalian mendapati permission denied kalian bisa menggunakan 'chmod +x' atau menggunakan command 'sudo crontab -e'.
 
 
-4. Langkah terakhir adalah untuk menjalankan kedua file untuk melihat apakah monitoring yang dilakukan sudah sesuai dengan spesifikasi yang diinginkan.
+5. Langkah terakhir adalah untuk menjalankan kedua file untuk melihat apakah monitoring yang dilakukan sudah sesuai dengan spesifikasi yang diinginkan.
    Gunakan command 'bash' untuk menjalankan kedua file tadi, setelah itu kalian dapat menggunakan command 'find' untuk mencari log monitoring tersebut.
    Log file tersebut memiliki code seperti ini:
        a. minute_log.sh : metrics_20240325195825.log
