@@ -141,40 +141,6 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
 
 2. Ketika program **register.sh** dijalankan maka user maupun admin akan melakukan register. *register* itu sendiri menggunakan email, username, pertanyaan keamanan serta jawabannya dan password, berikut adalah code snippetnya:
 
-#### cek email
-```
-function check_email_exists() {
-    local email=$1
-    grep -q "^$email:" users.txt
-    return $?
-}
-```
-#### enkripsi password base64
-```
-function encrypt_password() {
-    local password=$1
-    echo -n "$password" | base64
-}
-```
-#### cek password sesuai minimum kriteria
-```
-function validate_password() {
-    local password=$1
-    if [[ ${#password} -lt 8 ]]; then
-        return 1
-    fi
-    if ! [[ "$password" =~ [[:lower:]] ]]; then
-        return 1
-    fi
-    if ! [[ "$password" =~ [[:upper:]] ]]; then
-        return 1
-    fi
-    if ! [[ "$password" =~ [0-9] ]]; then
-        return 1
-    fi
-    return 0
-}
-```
 #### Fungsi untuk mendaftarkan pengguna
 ```
 function register_user() {
@@ -215,6 +181,7 @@ function register_user() {
     echo "Pengguna $username berhasil terdaftar."
 }
 ```
+fungsi ini memeriksa apakah email yang diberikan sudah terdaftar dalam sistem dengan memanggil fungsi `check_email_exists`. Selanjutnya, fungsi memeriksa kekuatan password dengan memanggil fungsi `validate_password`. Kemudian data pengguna yang berhasil di register akan disimpan pada file `users.txt` dan di akhir fungsi akan mencatat register dalam file log `auth.log`.
 
 #### Skrip utama / main
 ```
