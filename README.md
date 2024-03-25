@@ -137,8 +137,8 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
 ## Soal 2
 
 ### Langkah-Langkah
+1. Saya akan membuat program yang akan menyimpan data yang sudah diregister-kan oleh user yang kemudian bisa menjadi data pada saat login. Sehingga saya membuat file login.sh dan register.sh yang dimana register.sh akan dijalankan saat user akan membuat/mendaftarkan email dan login.sh ketika akun sudah terdaftar
 
-(isi langkah-langkah pengerjaan)
 
 ## Soal 3
 
