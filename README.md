@@ -141,6 +141,7 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
 
 2. Ketika program **register.sh** dijalankan maka user maupun admin akan melakukan register. *register* itu sendiri menggunakan email, username, pertanyaan keamanan serta jawabannya dan password, berikut adalah code snippetnya:
 
+#### **register.sh**
 #### Fungsi untuk mendaftarkan pengguna
 ``` Shell Script
 function register_user() {
@@ -167,7 +168,6 @@ fungsi ini memeriksa apakah email yang diberikan sudah terdaftar dalam sistem de
 ``` Shell Script
 echo "Welcome to Registration System"
 
-
 read -p "Enter you email: " email
 read -p "Enter your username: " username
 read -p "Enter a security question: " security_question
@@ -178,6 +178,71 @@ echo
 register_user "$email" "$username" "$security_question" "$security_answer" "$password"
 ```
 fungsi main diatas untuk menampilkan seperti di soal. Kemudian setiap data yang dimasukkan oleh user akan disimpan pada variabel sesuai dengan yang ditentukan. Dan fungsi `register_user` akan melakukan proses register seperti fungsi diatasnya.
+
+3. Kemudian di soal meminta agar **login.sh** dapat mengidentifikasi admin atau user yang sedang register, berikut contoh snippetnya :
+``` Shell Script
+if [[ $email == *admin* ]]; then
+        user_type="admin"
+    else
+        user_type="pengguna"
+    fi
+```
+Dengan program diatas maka jika alamat email mengandung kata "admin" maka variabel `user_type` akan diatur sebagai "admin", begitupun sebaliknya.
+
+4. Kemudian program diminta agar dapat mengenkripsi menggunakan base64 maka saya menggunakan fungsi sebagai berikut:
+``` Shell Script
+function encrypt_password() {
+    local password=$1
+    echo -n "$password" | base64
+}
+```
+Kriteria berikutnya password yang dibuat harus (lebih dari 8 karakter, Harus terdapat 1 huruf kapital dan 1 huruf kecil dan paling sedikit terdiri dari 1 angka) maka saya membuat fungsi berikutnya seperti berikut: 
+``` Shell Script
+function validate_password() {
+    local password=$1
+    if [[ ${#password} -lt 8 ]]; then
+        return 1
+    fi
+    if ! [[ "$password" =~ [[:lower:]] ]]; then
+        return 1
+    fi
+    if ! [[ "$password" =~ [[:upper:]] ]]; then
+        return 1
+    fi
+    if ! [[ "$password" =~ [0-9] ]]; then
+        return 1
+    fi
+    return 0
+}
+```
+Fungsi `validate_password()` adalah sebuah bash function yang bertujuan untuk memvalidasi kekuatan password yang diberikan, dengan memeriksa panjang password, keberadaan setidaknya satu karakter huruf kecil, satu karakter huruf besar, dan satu digit, serta mengembalikan nilai 0 jika memenuhi semua persyaratan atau nilai 1 jika tidak.
+
+5. Kemudian data register akan dimasukkan ke dalam file `users.txt` didalam file tersebut terdapat semua data login termasuk email, password, dll. Saya menggunakan fungsi sebagai berikut
+``` Shell Script
+ echo "$email:$username:$security_question:$security_answer:$encrypted_password:$user_type" >> users.txt
+
+    echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN BERHASIL] Pengguna $username berhasil terdaftar." >> auth.log
+    echo "Pengguna $username berhasil terdaftar."
+```
+Program tersebut merupakan bagian dari sebuah skrip bash yang bertujuan untuk mendaftarkan pengguna baru ke dalam sistem. Baris pertama menambahkan data pengguna baru ke dalam file `users.txt`, sementara baris kedua mencatat keberhasilan pendaftaran dalam file log `auth.log `dan mencetak pesan keberhasilan pendaftaran ke dalam output terminal.
+
+#### **login.sh**
+6. Karena program harus bisa melakukan login setelah register, login hanya perlu dilakukan menggunakan password dan email. Saya menmbuat fungsi awal sebagai berikut
+``` Shell Script
+# Fungsi untuk melakukan login
+function login() {
+    local email=$1
+    local password=$2
+
+    # Periksa apakah email dan password cocok dengan data yang teregister
+    if grep -q "^$email:" users.txt && grep -q "^$email:.*:.*:.*:.*:" users.txt && grep -q "^$email:.*:.*:.*:$password:" users.txt; then
+        echo "Login berhasil!"
+    else
+        echo "Login gagal. Email atau password salah."
+    fi
+}
+```
+Itu merupakan fungsi awal untuk user memasukkan data login kemudian diperiksa apakah data yang dimasukkan cocok dengan data pada `users.txt`
 
 ## Soal 3
 
