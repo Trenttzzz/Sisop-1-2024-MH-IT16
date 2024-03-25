@@ -241,5 +241,76 @@ register_user "$email" "$username" "$security_question" "$security_answer" "$pas
 ## Soal 4
 
 ### Langkah-Langkah
+1. Pada soal ini, kita akan membantu Stitch untuk membuat sebuah program yang dimana program tersebut dapat membantunya untuk monitoring resource pada PC. Program tersebut cukup untuk monitoring ram dan monitoring size suatu directory. Langkah pertama yang dapat kita lakukan adalah dengan membuat suatu directori yang berisi 2 file, yang akan kita namakan:
+    a.minute_log.sh
+    b.aggregate_minutes_to_hourly_log.sh
 
-(isi langkah-langkah pengerjaan)
+
+2. Kemudian kita akan memonitoring semua metrics yang ada di directori, dengan target_path yaitu, /home/user.
+   Berikut adalah codenya:
+
+#### Skrip untuk Mencatat Metrik Setiap Menit (minute_log.sh):
+```
+#!/bin/bash
+
+# Define the log file path
+log_file="/home/chyldmoeleister/log/metrics_$(date +'%Y%m%d%H%M%S').log"
+
+# Execute the commands to retrieve system metrics
+mem_metrics=$(free -m | grep Mem | awk '{print $2 "," $3 "," $4 "," $5 "," $6 "," $7 "," $8}')
+swap_metrics=$(free -m | grep Swap | awk '{print $2 "," $3 "," $4}')
+path="/home/chyldmoeleister/log/"
+path_size=$(du -sh "$path" | cut -f1)
+
+# Write the metrics to the log file
+echo "mem_total,mem_used,mem_free,mem_shared,mem_buff,mem_available,swap_total,swap_used,swap_free,path,path_size" > "$log_file"
+echo "$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
+
+
+#### Skrip untuk Membuat Agregasi Per Jam (aggregate_minutes_to_hourly_log.sh):
+```
+#!/bin/bash
+
+# Determine the current user's home directory
+user_home=$(getent passwd "$(whoami)" | cut -d: -f6)
+
+# Define the path to the log file in the user's home directory
+log_file="$user_home/log/metrics_agg_$(date +'%Y%m%d%H%M%S').log"
+
+# Execute the commands to retrieve system metrics
+mem_metrics=$(free -m | grep Mem | awk '{print $2 "," $3 "," $4 "," $5 "," $6 "," $7 "," $8}')
+swap_metrics=$(free -m | grep Swap | awk '{print $2 "," $3 "," $4}')
+path="/home/chyldmoeleister/log/"
+path_size=$(du -sh "$path" | cut -f1)
+
+# Write the metrics to the log file
+echo "type,mem_total,mem_used,mem_free,mem_shared,mem_buff,mem_available,swap_total,swap_used,swap_free,path,path_size" > "$log_file"
+echo "minimum,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
+echo "maximum,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
+echo "average,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
+
+
+3. Untuk menjalankan kedua skrip ini secara otomatis, tambahkan entri ke dalam crontab sebagai berikut:
+       a. Konfigurasi Cron untuk Mencatat Metrik Setiap Menit:
+           Tambahkan entri berikut ke dalam crontab (crontab -e):
+           * * * * * /path/to/minute_log.sh
+       b. Konfigurasi Cron untuk Membuat Agregasi Per Jam:
+           Tambahkan entri berikut ke dalam crontab (crontab -e):
+           0 * * * * /path/to/aggregate_minutes_to_hourly_log.sh
+
+   *Pastikan untuk mengganti /path/to/aggregate_minutes_to_hourly_log.sh dengan path lengkap ke skrip aggregate_minutes_to_hourly_log.sh.
+   Kemudian setelah itu, jika kalian mendapati permission denied kalian bisa menggunakan 'chmod +x' atau menggunakan command 'sudo crontab -e'.
+
+
+4. Langkah terakhir adalah untuk menjalankan kedua file untuk melihat apakah monitoring yang dilakukan sudah sesuai dengan spesifikasi yang diinginkan.
+   Gunakan command 'bash' untuk menjalankan kedua file tadi, setelah itu kalian dapat menggunakan command 'find' untuk mencari log monitoring tersebut.
+   Log file tersebut memiliki code seperti ini:
+       a. minute_log.sh : metrics_20240325195825.log
+       b. aggregate_minutes_to_hourly_log.sh : metrics_agg_20240325200024.log
+
+   Kemudian cek kembali apakah isi dari sudah sesuai dengan spesifikasi yang diinginkan.
+
+
+
+
+
