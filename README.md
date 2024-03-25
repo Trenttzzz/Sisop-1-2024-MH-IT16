@@ -137,14 +137,15 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
 ## Soal 2
 
 ### Langkah-Langkah
-1. Saya akan membuat program yang akan menyimpan data yang sudah diregister-kan oleh user yang kemudian bisa menjadi data pada saat login. Sehingga saya membuat file **login.sh** dan **register.sh** yang dimana **register.sh** akan dijalankan saat user akan membuat/mendaftarkan email dan **login.sh** ketika akun sudah terdaftar
+1. Saya akan membuat program yang akan menyimpan data yang sudah diregister-kan oleh user yang kemudian bisa menjadi data pada saat login. Sehingga saya membuat file **login.sh** dan **register.sh** yang dimana **register.sh** akan dijalankan saat user akan         
+   membuat/mendaftarkan email dan **login.sh** ketika akun sudah terdaftar
 
 2. Ketika program **register.sh** dijalankan maka user maupun admin akan melakukan register. *register* itu sendiri menggunakan email, username, pertanyaan keamanan serta jawabannya dan password, berikut adalah code snippetnya:
 
-### **register.sh**
-#### Fungsi untuk mendaftarkan pengguna
-``` Shell Script
-function register_user() {
+   ### **register.sh**
+   #### Fungsi untuk mendaftarkan pengguna
+   ``` Shell Script
+    function register_user() {
     local email=$1
     local username=$2
     local security_question=$3
@@ -161,44 +162,44 @@ function register_user() {
     # masukkan data ke users.txt
     echo "$email:$username:$security_question:$security_answer:$encrypted_password:$user_type" >> users.txt
 
-```
-fungsi ini memeriksa apakah email yang diberikan sudah terdaftar dalam sistem dengan memanggil fungsi `check_email_exists`. Kemudian data pengguna yang berhasil di register akan disimpan pada file `users.txt` dan di akhir fungsi akan mencatat register dalam file log `auth.log`.
+    ```
+   fungsi ini memeriksa apakah email yang diberikan sudah terdaftar dalam sistem dengan memanggil fungsi `check_email_exists`. Kemudian data pengguna yang berhasil di register akan disimpan pada file `users.txt` dan di akhir fungsi akan mencatat register dalam file log    `auth.log`.
 
-#### Skrip utama / main
-``` Shell Script
-echo "Welcome to Registration System"
+    #### Skrip utama / main
+    ``` Shell Script
+    echo "Welcome to Registration System"
 
-read -p "Enter you email: " email
-read -p "Enter your username: " username
-read -p "Enter a security question: " security_question
-read -p "Enter the answer to your security question: " security_answer
-read -sp "Enter a password (minimum 8 characters, at least 1 uppercase letter,1 lowercase letter, 1 digit, 1 symbol, and not same as username, birthdate, or name): " password
-echo
+    read -p "Enter you email: " email
+    read -p "Enter your username: " username
+    read -p "Enter a security question: " security_question
+    read -p "Enter the answer to your security question: " security_answer
+    read -sp "Enter a password (minimum 8 characters, at least 1 uppercase letter,1 lowercase letter, 1 digit, 1 symbol, and not same as username, birthdate, or name): " password
+    echo
 
-register_user "$email" "$username" "$security_question" "$security_answer" "$password"
-```
-fungsi main diatas untuk menampilkan seperti di soal. Kemudian setiap data yang dimasukkan oleh user akan disimpan pada variabel sesuai dengan yang ditentukan. Dan fungsi `register_user` akan melakukan proses register seperti fungsi diatasnya.
+     register_user "$email" "$username" "$security_question" "$security_answer" "$password"
+    ```
+   fungsi main diatas untuk menampilkan seperti di soal. Kemudian setiap data yang dimasukkan oleh user akan disimpan pada variabel sesuai dengan yang ditentukan. Dan fungsi `register_user` akan melakukan proses register seperti fungsi diatasnya.
 
 3. Kemudian di soal meminta agar **login.sh** dapat mengidentifikasi admin atau user yang sedang register, berikut contoh snippetnya :
-``` Shell Script
-if [[ $email == *admin* ]]; then
+    ``` Shell Script
+    if [[ $email == *admin* ]]; then
         user_type="admin"
     else
         user_type="pengguna"
     fi
-```
-Dengan program diatas maka jika alamat email mengandung kata "admin" maka variabel `user_type` akan diatur sebagai "admin", begitupun sebaliknya.
+    ```
+   Dengan program diatas maka jika alamat email mengandung kata "admin" maka variabel `user_type` akan diatur sebagai "admin", begitupun sebaliknya.
 
 4. Kemudian program diminta agar dapat mengenkripsi menggunakan base64 maka saya menggunakan fungsi sebagai berikut:
-``` Shell Script
-function encrypt_password() {
+    ``` Shell Script
+    function encrypt_password() {
     local password=$1
     echo -n "$password" | base64
-}
-```
-Kriteria berikutnya password yang dibuat harus (lebih dari 8 karakter, Harus terdapat 1 huruf kapital dan 1 huruf kecil dan paling sedikit terdiri dari 1 angka) maka saya membuat fungsi berikutnya seperti berikut: 
-``` Shell Script
-function validate_password() {
+    }
+    ```
+     Kriteria berikutnya password yang dibuat harus (lebih dari 8 karakter, Harus terdapat 1 huruf kapital dan 1 huruf kecil dan paling sedikit terdiri dari 1 angka) maka saya membuat fungsi berikutnya seperti berikut: 
+    ``` Shell Script
+    function validate_password() {
     local password=$1
     if [[ ${#password} -lt 8 ]]; then
         return 1
@@ -213,24 +214,24 @@ function validate_password() {
         return 1
     fi
     return 0
-}
-```
-Fungsi `validate_password()` adalah sebuah bash function yang bertujuan untuk memvalidasi kekuatan password yang diberikan, dengan memeriksa panjang password, keberadaan setidaknya satu karakter huruf kecil, satu karakter huruf besar, dan satu digit, serta mengembalikan nilai 0 jika memenuhi semua persyaratan atau nilai 1 jika tidak.
+    }
+    ```
+   Fungsi `validate_password()` adalah sebuah bash function yang bertujuan untuk memvalidasi kekuatan password yang diberikan, dengan memeriksa panjang password, keberadaan setidaknya satu karakter huruf kecil, satu karakter huruf besar, dan satu digit, serta              mengembalikan nilai 0 jika memenuhi semua persyaratan atau nilai 1 jika tidak.
 
 5. Kemudian data register akan dimasukkan ke dalam file `users.txt` didalam file tersebut terdapat semua data login termasuk email, password, dll. Saya menggunakan fungsi sebagai berikut
-``` Shell Script
- echo "$email:$username:$security_question:$security_answer:$encrypted_password:$user_type" >> users.txt
+    ``` Shell Script
+     echo "$email:$username:$security_question:$security_answer:$encrypted_password:$user_type" >> users.txt
 
     echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN BERHASIL] Pengguna $username berhasil terdaftar." >> auth.log
     echo "Pengguna $username berhasil terdaftar."
-```
-Program tersebut merupakan bagian dari sebuah skrip bash yang bertujuan untuk mendaftarkan pengguna baru ke dalam sistem. Baris pertama menambahkan data pengguna baru ke dalam file `users.txt`, sementara baris kedua mencatat keberhasilan pendaftaran dalam file log `auth.log `dan mencetak pesan keberhasilan pendaftaran ke dalam output terminal.
+    ```
+    Program tersebut merupakan bagian dari sebuah skrip bash yang bertujuan untuk mendaftarkan pengguna baru ke dalam sistem. Baris pertama menambahkan data pengguna baru ke dalam file `users.txt`, sementara baris kedua mencatat keberhasilan pendaftaran dalam file log     `auth.log `dan mencetak pesan keberhasilan pendaftaran ke dalam output terminal.
 
-### **login.sh**
+   ### **login.sh**
 6. Karena program harus bisa melakukan login setelah register, login hanya perlu dilakukan menggunakan password dan email. Saya menmbuat fungsi awal sebagai berikut
-``` Shell Script
-# Fungsi untuk melakukan login
-function login() {
+    ``` Shell Script
+    # Fungsi untuk melakukan login
+    function login() {
     local email=$1
     local password=$2
 
@@ -240,19 +241,19 @@ function login() {
     else
         echo "Login gagal. Email atau password salah."
     fi
-}
-```
-Itu merupakan fungsi awal untuk user memasukkan data login kemudian diperiksa apakah data yang dimasukkan cocok dengan data pada `users.txt`
+    }
+    ```
+    Itu merupakan fungsi awal untuk user memasukkan data login kemudian diperiksa apakah data yang dimasukkan cocok dengan data pada `users.txt`
 
 7. Disini saya akan membuat program akan menampilkan opsi ketika **login.sh** dijalankan seperti pada soal maka saya akan membuat fungsi seperti berikut:
-```shell script
-echo "Welcome to Login System"
-echo "1. Login"
-echo "2. Lupa Password"
+    ```shell script
+    echo "Welcome to Login System"
+    echo "1. Login"
+    echo "2. Lupa Password"
 
-read -p "" choice
+    read -p "" choice
 
-case $choice in
+    case $choice in
     1)
         read -p "Email: " email
         read -sp "Password: " password
@@ -266,10 +267,10 @@ case $choice in
     *)
         echo "Pilihan tidak valid."
         ;;
-```
-Maka program tersebut akan menampilkan opsi login atau lupa password, jika user memilih opsi login maka program akan menjalankan fungsi `login` kemudian jika user memilih opsi 2 yang dimana merupakan opsi lupa password maka program akan menjalankan fungsi `forgot_password`, fungsi forgot password sendiri akan saya jelaskan dibawah berikut:
-``` Shell Script
-function forgot_password() {
+    ```
+   Maka program tersebut akan menampilkan opsi login atau lupa password, jika user memilih opsi login maka program akan menjalankan fungsi `login` kemudian jika user memilih opsi 2 yang dimana merupakan opsi lupa password maka program akan menjalankan fungsi              `forgot_password`, fungsi forgot password sendiri akan saya jelaskan dibawah berikut:
+    ``` Shell Script
+    function forgot_password() {
     local email=$1
 
     # periksa email ada/tidak
@@ -297,13 +298,13 @@ function forgot_password() {
     local new_password=$(grep "^$email:" users.txt | cut -d ':' -f 5)
 
     echo "Password Anda telah direset menjadi: $new_password"
-}
-```
-fungsi diatas adalah fungsi yang dimana user dapat mereset password jika lupa, `forgot_password()` digunakan untuk mereset password. Singkatnya program akan memeriksa apakah email yang dimasukkan oleh user terdapat pada `users.txt` jika email ditemukan maka program akan menampilkan pertanyaan keamanan sesuai dengan email user, semua itu diambil dari `users.txt`. Kemudian jika jawaban dari pertanyaan keamanan yang dijawab oleh user benar maka program akan mengambil password baru dari file `users.txt` dan menampilkan password baru kepada user sebagai reset password.
+    }
+    ```
+    fungsi diatas adalah fungsi yang dimana user dapat mereset password jika lupa, `forgot_password()` digunakan untuk mereset password. Singkatnya program akan memeriksa apakah email yang dimasukkan oleh user terdapat pada `users.txt` jika email ditemukan maka program     akan menampilkan pertanyaan keamanan sesuai dengan email user, semua itu diambil dari `users.txt`. Kemudian jika jawaban dari pertanyaan keamanan yang dijawab oleh user benar maka program akan mengambil password baru dari file `users.txt` dan menampilkan password       baru kepada user sebagai reset password.
 
 8. Kemudian pada soal diminta untuk seorang admin dapa menambah mengedit (username, pertanyaan keamanan dan jawaban, dan password), dan menghapus user untuk memudahkan kerjanya sebagai admin. Maka saya gunakan program sebagai berikut:
-``` Shell Script
-function admin_menu() {
+    ``` Shell Script
+    function admin_menu() {
     PS3="Select an option: "
     options=("Add User" "Edit User" "Delete User" "Logout")
     select opt in "${options[@]}"
@@ -332,23 +333,23 @@ function admin_menu() {
             *) echo "Invalid option. Please select again.";;
         esac
     done
-}
+    }
 
     echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN BERHASIL] Pengguna dengan email $email berhasil login." >> auth.log
     echo "Login berhasil. Selamat datang!"
-```
+    ```
 9. Agar program dapat mencatat seluruh log dengan baik maka saya membuat program menyimpan semua seluruh log baik login maupun register ke dalam file auth.log menggunakan fungsi sebagai berikut.
-#### Pada `register.sh``
-* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN GAGAL] Pengguna dengan email $email sudah terdaftar." >> auth.log`
-* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN GAGAL] Password tidak memenuhi persyaratan kompleksitas untuk pengguna $username." >> auth.log`
-* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN BERHASIL] Pengguna $username berhasil terdaftar." >> auth.log`
-#### Pada `login.sh`
-* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN GAGAL] Pengguna dengan email $email tidak ada." >> auth.log`
-* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN FAILED] Incorrect password for user with email $email." >> auth.log`
-* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN SUCCESS] Admin with email $email logged in successfully." >> auth.log`
-* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN SUCCESS] User with email $email logged in successfully." >> auth.log`
-* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN BERHASIL] Pengguna dengan email $email berhasil login." >> auth.log`
-Pada intinya semua aktifitas yang terdapat pada login dan register akan tersimpan pada auth.log menggunakan perintah seperti diatas.
+    #### Pada `register.sh``
+    * `echo "[date +'%d/%m/%Y %H:%M:%S'] [PENGGABUNGAN GAGAL] Pengguna dengan email $email sudah terdaftar." >> auth.log`
+    * `echo "[date +'%d/%m/%Y %H:%M:%S'] [PENGGABUNGAN GAGAL] Password tidak memenuhi persyaratan kompleksitas untuk pengguna $username." >> auth.log`
+    * `echo "[date +'%d/%m/%Y %H:%M:%S'] [PENGGABUNGAN BERHASIL] Pengguna $username berhasil terdaftar." >> auth.log`
+    #### Pada `login.sh`
+    * `echo "[date +'%d/%m/%Y %H:%M:%S'] [LOGIN GAGAL] Pengguna dengan email $email tidak ada." >> auth.log`
+    * `echo "[date +'%d/%m/%Y %H:%M:%S'] [LOGIN FAILED] Incorrect password for user with email $email." >> auth.log`
+    * `echo "[date +'%d/%m/%Y %H:%M:%S'] [LOGIN SUCCESS] Admin with email $email logged in successfully." >> auth.log`
+    * `echo "[date +'%d/%m/%Y %H:%M:%S'] [LOGIN SUCCESS] User with email $email logged in successfully." >> auth.log`
+    * `echo "[date +'%d/%m/%Y %H:%M:%S'] [LOGIN BERHASIL] Pengguna dengan email $email berhasil login." >> auth.log`
+    Pada intinya semua aktifitas yang terdapat pada login dan register akan tersimpan pada auth.log menggunakan perintah seperti diatas.
 
 ## Soal 3
 
