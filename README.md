@@ -301,6 +301,55 @@ function forgot_password() {
 ```
 fungsi diatas adalah fungsi yang dimana user dapat mereset password jika lupa, `forgot_password()` digunakan untuk mereset password. Singkatnya program akan memeriksa apakah email yang dimasukkan oleh user terdapat pada `users.txt` jika email ditemukan maka program akan menampilkan pertanyaan keamanan sesuai dengan email user, semua itu diambil dari `users.txt`. Kemudian jika jawaban dari pertanyaan keamanan yang dijawab oleh user benar maka program akan mengambil password baru dari file `users.txt` dan menampilkan password baru kepada user sebagai reset password.
 
+8. Kemudian pada soal diminta untuk seorang admin dapa menambah mengedit (username, pertanyaan keamanan dan jawaban, dan password), dan menghapus user untuk memudahkan kerjanya sebagai admin. Maka saya gunakan program sebagai berikut:
+``` Shell Script
+function admin_menu() {
+    PS3="Select an option: "
+    options=("Add User" "Edit User" "Delete User" "Logout")
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "Add User")
+                bash register.sh
+                break
+                ;;
+            "Edit User")
+                read -p "Enter the email of the user you want to edit: " email
+                # fungsi ediit user
+                bash edit_user.sh "$email"
+                break
+                ;;
+            "Delete User")
+                read -p "Enter the email of the user you want to delete: " email
+                # fungsi delete user
+                bash delete_user.sh "$email"
+                break
+                ;;
+            "Logout")
+                echo "Logging out..."
+                break
+                ;;
+            *) echo "Invalid option. Please select again.";;
+        esac
+    done
+}
+
+    echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN BERHASIL] Pengguna dengan email $email berhasil login." >> auth.log
+    echo "Login berhasil. Selamat datang!"
+```
+9. Agar program dapat mencatat seluruh log dengan baik maka saya membuat program menyimpan semua seluruh log baik login maupun register ke dalam file auth.log menggunakan fungsi sebagai berikut.
+#### Pada `register.sh``
+* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN GAGAL] Pengguna dengan email $email sudah terdaftar." >> auth.log`
+* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN GAGAL] Password tidak memenuhi persyaratan kompleksitas untuk pengguna $username." >> auth.log`
+* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [PENGGABUNGAN BERHASIL] Pengguna $username berhasil terdaftar." >> auth.log`
+#### Pada `login.sh`
+* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN GAGAL] Pengguna dengan email $email tidak ada." >> auth.log`
+* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN FAILED] Incorrect password for user with email $email." >> auth.log`
+* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN SUCCESS] Admin with email $email logged in successfully." >> auth.log`
+* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN SUCCESS] User with email $email logged in successfully." >> auth.log`
+* `echo "[`date +'%d/%m/%Y %H:%M:%S'`] [LOGIN BERHASIL] Pengguna dengan email $email berhasil login." >> auth.log`
+Pada intinya semua aktifitas yang terdapat pada login dan register akan tersimpan pada auth.log menggunakan perintah seperti diatas.
+
 ## Soal 3
 
 ### Langkah-Langkah
