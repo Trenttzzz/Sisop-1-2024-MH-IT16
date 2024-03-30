@@ -33,13 +33,18 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
     ```
     jadi intinya saya membuat variabel local `result`, kemudian didalamnya memasukkan variabel `data` dengan `echo`, kemudian dengan menggunakan `awk -F` untuk mencari nilai dalam kolom. `sales[$1]+=$2`  dapat diinterpretasikan sebagai proses mengakumulasi total diskon untuk setiap segment yang ditemukan dalam data yang diberikan. kemudian menggunakan syntax **END** untuk memberitahu awk bahwa scriptnya didalamnya dijalankan di akhir. kemudian menggunakan **for loop** untuk mencari nilai max nya, dan **print** hasilnya. diakhiri dengan `echo "$result"` untuk menjalankan dan menampilkan hasilnya.
 
-4. kemudian cipung dan abe ingin menampilkan segment dengan profit paling kecil. diawali dengan saya membuat fungsi bernama **lowest_profit_segment**, didalamnya berisi variabel:
+   berikut adalah output dari bagian A:
+
+   ![soal_1_bagian_a_shift_1](https://github.com/Trenttzzz/Sisop-1-2024-MH-IT16/assets/141043792/359f7638-68ec-4280-849f-2b57568c3bc1)
+
+
+5. kemudian cipung dan abe ingin menampilkan segment dengan profit paling kecil. diawali dengan saya membuat fungsi bernama **lowest_profit_segment**, didalamnya berisi variabel:
 
     ` local data=$(tail -n +2 /home/zaa/Downloads/Sandbox.csv | cut -d',' -f7,20)` 
 
     sama seperti di langkah nomor 2 fungsinya untuk mengambil baris kedua dan seterusnya dan mengambil hanya pada kolom 7 dan 20 yaitu **segment** dan **profit**.
 
-5. kemudian membuat variable local `result` untuk mencari segment dengan diskon paling kecil yang ada didalam **Sandbox.csv** berikut adalah command yang saya gunakan: 
+6. kemudian membuat variable local `result` untuk mencari segment dengan diskon paling kecil yang ada didalam **Sandbox.csv** berikut adalah command yang saya gunakan: 
     ```Shell Script
     local data=$(tail -n +2 /home/zaa/Downloads/Sandbox.csv | cut -d',' -f7,20)
 
@@ -58,7 +63,12 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
     ```
     syntax awalnya sama dengan command yang ada pada langkah 6, ini hanya saya ganti pada bagian **for loop** nya untuk mencari segment dengan profit **terkecil** dan hanya 1 saja itulah mengapa saya menggunakan syntax ``exit` di akhir **for loop**.
 
-6. lanjut untuk bagian 3, cipung dan abe meminta untuk menampilkan top 3 kategori dengan total profit paling banyak, awalnya saya mendeclare variable bernama `top_3_totalprofit_categories` yang berisi:
+   berikut adalah output dari bagian B:
+
+   ![soal_1_bagian_b_shift_1](https://github.com/Trenttzzz/Sisop-1-2024-MH-IT16/assets/141043792/d90f4311-6998-46b7-957c-c3ad82f86c8c)
+
+
+8. lanjut untuk bagian 3, cipung dan abe meminta untuk menampilkan top 3 kategori dengan total profit paling banyak, awalnya saya mendeclare variable bernama `top_3_totalprofit_categories` yang berisi:
     ```Shell Script
     local data=$(tail -n +2 /home/zaa/Downloads/Sandbox.csv | cut -d',' -f14,20)
 
@@ -78,28 +88,27 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
 
     kemudian sama dengan variabel sebelumnya saya menggunakan awk untuk mencari top 3 kategori paling banyak, baris `profit[$1]+=$2` berarti profit dari kategori yang ditemukan di kolom pertama dari baris akan **ditambahkan** dengan nilai di kolom kedua. lalu mengurutkan hasil total nya dengan `PROCINFO["sorted_in"]="@val_num_desc"`, kemudian menggunakan **for loop** untuk menampilkan hasil dari kit mengurutkan hasil profit per kategorinya. kemudian dilanjut dengan pipe lalu `head -n3` fungsinya untuk menampilkan maksimal 3 kategori saja.
 
-7. kemudian cipung dan abe meminta untuk mencari purchace date dan amount atas nama adriens bila ada. awalnya saya declare fungsi `check_order_adriaens` lalu didalamnya berisi:
-    ```Shell Script
-    local result=$(awk -F',' '{
-        if ($6 == "adriaens") {
-            print $2, $18
-            found=1
-        }
-    }
-    END {
-        if (found != 1) {
-            print "tidak ada adriaens dalam file csv"
-        }
-    }' /home/zaa/Downloads/Sandbox.csv)
+   berikut adalah output dari bagian C:
 
-    echo "$result"
+   ![soal_1_bagian_c_shft_1](https://github.com/Trenttzzz/Sisop-1-2024-MH-IT16/assets/141043792/9e40a843-752a-4996-9ee5-251b66e892c7)
+
+
+10. kemudian cipung dan abe meminta untuk mencari purchace date dan amount atas nama adriens bila ada. awalnya saya declare fungsi `check_order_adriaens` lalu didalamnya berisi:
+    ```Shell Script
+    local data=$(tail -n +2 /home/zaa/Downloads/Sandbox.csv | cut -d',' -f2,6,18)
+
+    echo "$data" | grep 'Adriaens' | awk -F',' '{
+        print $1, $3
+    }'
     ```
 
-    cara kerja command diatas adalah menggunakan awk untuk mencari nama adriens dengan menggunakan `if` function jika `$6` atau kolom ke-6 sama dengan "adriens" maka `print $2, $18`, tampilakn kolom ke-2 (purchase date) dan kolom ke-18 (quantity). 
+   fungsi diatas menggunakan `grep` untuk mencocokkan kata Adriaens lalu di **pipe** ke awk untuk print kolom ke 1 dan 3 dari variabel lokal `data` yang kita bikin, berikut adalah outputnya:
 
-    kemudian menggunakan syntax END untuk memastikan command berikutnya di run saat terakhir, lalu dilanjutkan dengan `if` function untuk cek apakah output dari fungsi cek namanya *true* atau *false*, jika true maka `print $2, $18` jika false `print "tidak ada adriaens dalam file csv"`.
+   ![soal_1_revisi_output_shift_1](https://github.com/Trenttzzz/Sisop-1-2024-MH-IT16/assets/141043792/931f988e-8484-4537-9426-6d20f3a95ab7)
 
-8. lalu saya menambahan fungsi `main` untuk memanggil setiap fungsi yang sudah saya buat, sesuai dengan nomornya.
+   
+
+11. lalu saya menambahan fungsi `main` untuk memanggil setiap fungsi yang sudah saya buat, sesuai dengan nomornya.
     ```Shell Script
     main(){
 
@@ -417,8 +426,12 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
     rm -rf genshin_character.zip list_character.csv genshin_files.zip
     ```
     menggunakan grep untuk mengambil kata yang sesuai dan dihitung. terahirnya kita menghapus file yang sudah tidak digunakan dengan `rm -rf`.
+    Berikut adalah hasil output dari `awal.sh`:
 
-4. kemudian kita membuat file `search.sh` untuk mencari secret message yang ada dalm gambar nya.
+    ![output_awal_shift_1](https://github.com/Trenttzzz/Sisop-1-2024-MH-IT16/assets/141043792/de56cc6c-db75-4a54-b939-ea4e0c8e4699)
+
+
+5. kemudian kita membuat file `search.sh` untuk mencari secret message yang ada dalm gambar nya.
     ```bash
     path="/home/zaa/Desktop/sisop/modul-1/Sisop-1-2024-MH-IT16/soal_3/genshin_character"
 
@@ -468,7 +481,10 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
     done
     done
     ```
-    
+    Berikut adalah hasil output dari file `search.sh`:
+   
+    ![search_output_shift_1](https://github.com/Trenttzzz/Sisop-1-2024-MH-IT16/assets/141043792/e6a9a880-7629-4cfe-9365-c3fdb6f6d0e3)
+
 
 ## Soal 4
 
