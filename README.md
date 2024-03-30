@@ -535,13 +535,17 @@ echo "average,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
    Kemudian setelah itu, jika kalian mendapati permission denied kalian bisa menggunakan 'chmod +x' atau menggunakan command 'sudo crontab -e'.
 
 
-5. Langkah terakhir adalah untuk menjalankan kedua file untuk melihat apakah monitoring yang dilakukan sudah sesuai dengan spesifikasi yang diinginkan.
+4. Langkah terakhir adalah untuk menjalankan kedua file untuk melihat apakah monitoring yang dilakukan sudah sesuai dengan spesifikasi yang diinginkan.
    Gunakan command 'bash' untuk menjalankan kedua file tadi, setelah itu kalian dapat menggunakan command 'find' untuk mencari log monitoring tersebut.
    Log file tersebut memiliki code seperti ini:
        a. minute_log.sh : metrics_20240325195825.log
        b. aggregate_minutes_to_hourly_log.sh : metrics_agg_20240325200024.log
 
    Kemudian cek kembali apakah isi dari sudah sesuai dengan spesifikasi yang diinginkan.
+
+5. #### Tambahkan code berikut agar hanya user yang anda gunakan saat ini yang dapat mengakses log file tersebut :
+        chmod 600 "$log_file"
+   
 
 
 

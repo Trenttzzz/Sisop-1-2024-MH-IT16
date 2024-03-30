@@ -18,3 +18,5 @@ echo "minimum,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
 echo "maximum,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
 echo "average,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
 
+# Set permissions so that only chyldmoeleister can access the log file
+chmod 600 "$log_file"
