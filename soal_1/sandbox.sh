@@ -64,20 +64,13 @@ top_3_totalprofit_categories() {
 
 
 # Fungsi untuk mencari purchase date dan amount dari nama pembeli tertentu
+# revisi
 check_order_adriaens() {
-    local result=$(awk -F',' '{
-        if ($6 == "adriaens") {
-            print $2, $18
-            found=1
-        }
-    }
-    END {
-        if (found != 1) {
-            print "tidak ada adriaens dalam file csv"
-        }
-    }' /home/zaa/Downloads/Sandbox.csv)
+    local data=$(tail -n +2 /home/zaa/Downloads/Sandbox.csv | cut -d',' -f2,6,18)
 
-    echo "$result"
+    echo "$data" | grep 'Adriaens' | awk -F',' '{
+        print $1, $3
+    }'
 }
 
 main(){
