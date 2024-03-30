@@ -311,7 +311,7 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
     ```
     fungsi diatas adalah fungsi yang dimana user dapat mereset password jika lupa, `forgot_password()` digunakan untuk mereset password. Singkatnya program akan memeriksa apakah email yang dimasukkan oleh user terdapat pada `users.txt` jika email ditemukan maka program     akan menampilkan pertanyaan keamanan sesuai dengan email user, semua itu diambil dari `users.txt`. Kemudian jika jawaban dari pertanyaan keamanan yang dijawab oleh user benar maka program akan mengambil password baru dari file `users.txt` dan menampilkan password       baru kepada user sebagai reset password.
 
-8. Kemudian pada soal diminta untuk seorang admin dapa menambah mengedit (username, pertanyaan keamanan dan jawaban, dan password), dan menghapus user untuk memudahkan kerjanya sebagai admin. Maka saya gunakan program sebagai berikut:
+8. Kemudian pada soal diminta untuk seorang admin dapat menambah mengedit (username, pertanyaan keamanan dan jawaban, dan password), dan menghapus user untuk memudahkan kerjanya sebagai admin. Maka saya gunakan program sebagai berikut:
     ``` Shell Script
     function admin_menu() {
     PS3="Select an option: "
