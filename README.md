@@ -561,7 +561,8 @@ echo "average,$mem_metrics,$swap_metrics,$path,$path_size" >> "$log_file"
 
 5. #### Tambahkan code berikut agar hanya user yang anda gunakan saat ini yang dapat mengakses log file tersebut :
         chmod 600 "$log_file"
-   
+
+   #revisi kodingan dari minute_loh.sh dan aggregate_minute_to_hourly_loh.sh memiliki hasil berupa log_file yang masih dapat di akses oleh user lain
 
 
 
