@@ -356,7 +356,119 @@ pertama saya mendeclare sebuah fungsi bernama **highest_sales_customer** untuk m
 
 ### Langkah-Langkah
 
-(isi langkah-langkah pengerjaan)
+1. pertama membuat file `awal.sh` untuk mendownload file yang di berikan dan unzip file yang telah di download serta decode nama file nya dari hex
+    ```bash
+    # Unduh file dari link yang diberikan
+    wget -O genshin_files.zip "https://drive.google.com/uc?export=download&id=1oGHdTf4_76_RacfmQIV4i7os4sGwa9vN"
+
+    # Unzip file yang telah diunduh
+    unzip genshin_files.zip
+
+    # Unzip file genshin_character.zip
+    unzip genshin_character.zip
+
+    path="/home/zaa/Desktop/sisop/modul-1/Sisop-1-2024-MH-IT16/soal_3/genshin_character"
+
+    # buat folder di dalam genshin_character
+    mkdir -p  "$path/Mondstat" "$path/Sumeru" "$path/Fontaine" "$path/Inazuma" "$path/Liyue"
+    ```
+
+    pada command diatas saya menggunakan `wget` untuk mendonwload file dari link yang diberikan, kemudian unzip file `genshin_file.zip` dan `genshin_character.zip` kemudian menggunakan declarasi `path` untuk mempermudah penulisan kode lebih lanjut, lalu membuat 5 folder berupa 5 region pada genshin yaitu: Mondstat, Sumeru, Fontaine, Inazuma, Liyue
+
+2. kemudian saya membuat **for loop** untuk melakukan iterasi kepada semua file.jpg yang ada di dalam folder `genshin_character` untuk di dekripsi dari hex ke string
+    ```bash
+    # iterasi ke semua file .jpg di dalam folder 
+    for file in "$path"/*.jpg; do
+  
+    # decrypt hex ke string
+    files_init=$(echo "${file%.*}")
+    decrypt=$(echo "${files_init##*/}" | xxd -r -p)
+
+    # mengganti nama file awal ke versi decrypt nya
+    mv -- "$path/${files_init##*/}".jpg "$decrypt".jpg
+
+    # ambil region dari nama $decrypt lalu tulis ulang namanya di fungsi $new_name
+    region=$(awk -F, "/$decrypt/"'{OFS=","; print $2}' list_character.csv)
+    new_name=$(awk -F, "/$decrypt/"'{OFS=","; print $2 "-" $1 "-" $3 "-" $4}' list_character.csv)
+  
+    # merename file decrypt menjadi new_name.jpg dan memindahkan file new_name ke region yang sesuai di file csv 
+    mv -- "$decrypt.jpg" "$new_name".jpg
+    mv "$new_name".jpg "$path/$region"
+    done
+
+    # clear output tidak penting
+    clear
+    ```
+
+    men decrypt file jpg nya dengan `xxd` lalu mengganti nama file awal ke versi decrypt nya dengan menggunakan `mv`, lalu mengambil region dari nama decrypt lalu tulis ulang namanya pada fungsi new_name
+    dilanjut dengan me rename file decrypt menjadi new_name.jpg dan memindahkan file new_name ke region yang sesuai dengan `csv`, diakhiri dengan clear
+
+3. kemudian kita disuruh untuk menghitung jumlah senjata yang setipe pada file .csv nya
+    ```bash
+    # hitung jumlah weapon yang setipe
+    echo "Weapon Count:"
+    echo "Claymore: $(grep -c 'Claymore' list_character.csv)"
+    echo "Polearm: $(grep -c 'Polearm' list_character.csv)"
+    echo "Catalyst: $(grep -c 'Catalyst' list_character.csv)"
+    echo "Bow: $(grep -c 'Bow' list_character.csv)"
+    echo "Sword: $(grep -c 'Sword' list_character.csv)"
+
+    # menghapus file yang tidak diperlukan
+    rm -rf genshin_character.zip list_character.csv genshin_files.zip
+    ```
+    menggunakan grep untuk mengambil kata yang sesuai dan dihitung. terahirnya kita menghapus file yang sudah tidak digunakan dengan `rm -rf`.
+
+4. kemudian kita membuat file `search.sh` untuk mencari secret message yang ada dalm gambar nya.
+    ```bash
+    path="/home/zaa/Desktop/sisop/modul-1/Sisop-1-2024-MH-IT16/soal_3/genshin_character"
+
+
+    # loop untuk meng 'scan' setiap folder dan scan file didalamya
+    for folder in "$path"/*; do
+    for file in "$folder"/*.jpg; do
+
+    file_name="${file%.*}"
+    name="${file##*/}"
+
+    # menggunakan steghide untuk mengammbil value dari image dan memasukkannya ke dalam $file_name.txt
+    steghide extract -sf "$file" -xf "$file_name.txt" -p "" -q
+    image_value=$(cat "$file_name.txt")
+
+    # declare waktu sekarang
+    CURRENT_TIME=$(date '+%d/%m/%y %H:%M:%S')
+
+    # decrypt image value dengan base 64
+    decrypted_text=$(echo "$image_value" | base64 -d)
+    
+
+    
+
+    # menggunakan grep untuk cek decrypted tex = https atau tidak
+    if echo "$decrypted_text" | grep -q "^https:"; then
+        echo -e "\n$CURRENT_TIME: There are s3cr3t_f1le5 on $file_name\nTHIS IS THE URL: $decrypted_text"
+        
+        echo "$time [FOUND] $file_name" >> image.log
+
+        # setelah ketemu url nya download dengan menggunakan wget
+         wget --content-disposition "$decrypted_text"
+
+        echo "$decrypted_text" >> "/home/zaa/Desktop/sisop/modul-1/Sisop-1-2024-MH-IT16/soal_3/$name.txt"
+
+        # delete outpud dri steghide yang tidak digunakan
+        rm -rf "$file_name.txt"
+        exit 0
+    else
+        echo "$CURRENT_TIME gak penting!"
+        echo "$CURRENT_TIME [NOT FOUND] $file_name" >> image.log
+        rm -rf "$file_name.txt"
+    fi
+
+    # jeda setiap 1 detik
+    sleep 1
+    done
+    done
+    ```
+    
 
 ## Soal 4
 
